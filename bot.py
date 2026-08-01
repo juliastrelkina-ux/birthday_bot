@@ -65,7 +65,9 @@ creds = Credentials.from_service_account_file(
 )
 
 client = gspread.authorize(creds)
-sheet = client.open(SHEET_NAME).sheet1
+sheet = client.open_by_key(
+    "1OQciIYGBX8Tv3W4_17Y-txMy63G8J9CIuyHtMgPkvaU"
+).sheet1
 
 
 def send(text):
