@@ -126,10 +126,10 @@ while True:
 
     now = datetime.now()
 
-    # Каждый день в 15:00
+    # Каждый день в 17:40
     if (
-        now.hour == 15
-        and now.minute == 0
+        now.hour == 17
+        and now.minute == 40
         and last_date != now.date()
     ):
 
