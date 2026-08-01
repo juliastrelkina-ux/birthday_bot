@@ -10,6 +10,7 @@ from google.oauth2.service_account import Credentials
 load_dotenv()
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
+print("Токен найден:", BOT_TOKEN[:10] if BOT_TOKEN else "НЕТ")
 CHAT_ID = os.getenv("CHAT_ID")
 
 SCOPES = [
