@@ -119,21 +119,4 @@ def check_birthdays():
         print("Завтра именинников нет.")
 
 
-last_date = None
-print ("Бот работает...")
-
-while True:
-
-    now = datetime.now()
-
-    # Каждый день в 17:40
-    if (
-        now.hour == 17
-        and now.minute == 40
-        and last_date != now.date()
-    ):
-
-        check_birthdays()
-        last_date = now.date()
-
-    time.sleep(30)
+check_birthdays()
