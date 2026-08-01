@@ -2,7 +2,7 @@ name: Birthday Bot
 
 on:
   schedule:
-    - cron: '0 15 * * *'
+    - cron: '30 15 * * *'
   workflow_dispatch:
 
 jobs:
@@ -10,20 +10,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Скачать проект
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Установить Python
+      - name: Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: Установить зависимости
-        run: |
-          pip install -r requirements.txt
-- name: Запустить бота
-  env:
-    BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-    CHAT_ID: ${{ secrets.CHAT_ID }}
-  run: |
-    python bot.py
+      - name: Install
+        run: pip install -r requirements.txt
+
+      - name: Run bot
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+        run: python bot.py
