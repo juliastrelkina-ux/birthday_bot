@@ -11,7 +11,6 @@ load_dotenv()
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 SHEET_NAME = os.getenv("GOOGLE_SHEET")
-print("SHEET_NAME =", SHEET_NAME)
 
 SCOPES = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -24,7 +23,9 @@ creds = Credentials.from_service_account_file(
 )
 
 client = gspread.authorize(creds)
-sheet = client.open(SHEET_NAME).sheet1
+sheet = client.open_by_key(
+    "1OQciIYGBX8Tv3W4_17Y-txMy63G8J9CIuyHtMgPkvaU"
+).sheet1
 
 
 def send(text):
@@ -64,9 +65,7 @@ creds = Credentials.from_service_account_file(
 )
 
 client = gspread.authorize(creds)
-sheet = client.open_by_key(
-    "1OQciIYGBX8Tv3W4_17Y-txMy63G8J9CIuyHtMgPkvaU"
-).sheet1
+sheet = client.open(SHEET_NAME).sheet1
 
 
 def send(text):
