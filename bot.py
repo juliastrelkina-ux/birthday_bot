@@ -11,6 +11,7 @@ load_dotenv()
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 SHEET_NAME = os.getenv("GOOGLE_SHEET")
+print("SHEET_NAME =", SHEET_NAME)
 
 SCOPES = [
     "https://www.googleapis.com/auth/spreadsheets",
