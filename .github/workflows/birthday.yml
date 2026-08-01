@@ -21,7 +21,9 @@ jobs:
       - name: Установить зависимости
         run: |
           pip install -r requirements.txt
-
-      - name: Запустить бота
-        run: |
-          python bot.py
+- name: Запустить бота
+  env:
+    BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+    CHAT_ID: ${{ secrets.CHAT_ID }}
+  run: |
+    python bot.py
