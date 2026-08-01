@@ -1,122 +1,110 @@
-import time
 import os
 import requests
 import gspread
 
-from dotenv import load_dotenv
-from google.oauth2.service_account import Credentials
-
-load_dotenv()
-
-BOT_TOKEN = os.getenv("BOT_TOKEN")
-CHAT_ID = os.getenv("CHAT_ID")
-SHEET_NAME = os.getenv("GOOGLE_SHEET")
-
-SCOPES = [
-    "https://www.googleapis.com/auth/spreadsheets",
-    "https://www.googleapis.com/auth/drive",
-]
-
-creds = Credentials.from_service_account_file(
-    "credentials.json",
-    scopes=SCOPES,
-)
-
-client = gspread.authorize(creds)
-sheet = client.open_by_key(
-    "1OQciIYGBX8Tv3W4_17Y-txMy63G8J9CIuyHtMgPkvaU"
-).sheet1
-
-
-def send(text):
-    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-
-    requests.post(
-        url,
-        data={
-            "chat_id": CHAT_ID,
-            "text": text
-        }
-    )
-
-
-import os
-import requests
-import gspread
 from datetime import datetime, timedelta
-
 from dotenv import load_dotenv
 from google.oauth2.service_account import Credentials
+
 
 load_dotenv()
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
-SHEET_NAME = os.getenv("GOOGLE_SHEET")
 
 SCOPES = [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive",
 ]
 
+
+# Подключение Google Sheets
 creds = Credentials.from_service_account_file(
     "credentials.json",
-    scopes=SCOPES,
+    scopes=SCOPES
 )
 
 client = gspread.authorize(creds)
+
+# Открываем таблицу по ID
 sheet = client.open_by_key(
     "1OQciIYGBX8Tv3W4_17Y-txMy63G8J9CIuyHtMgPkvaU"
 ).sheet1
 
 
-def send(text):
+def send_message(text):
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 
-    requests.post(
+    response = requests.post(
         url,
         data={
             "chat_id": CHAT_ID,
             "text": text
         }
     )
+
+    print(response.text)
 
 
 def check_birthdays():
 
-    tomorrow = (datetime.now() + timedelta(days=1)).strftime("%d.%m")
+    tomorrow = (
+        datetime.now() + timedelta(days=1)
+    ).strftime("%d.%m")
+
 
     rows = sheet.get_all_records()
 
-    found = False
+    birthdays = []
 
     for row in rows:
 
-        birthday = str(row["Дата рождения"])[:5]
+        date = str(row.get("Дата рождения", ""))
 
-        if birthday == tomorrow:
-
-            found = True
-
-            name = row["Имя"]
-
-            msg1 = (
-                "@juliastrelkina, сегодня нужно создать группу, всех собрать и открыть сбор 💵\n\n"
-                f"Завтра день рождения у:\n{name}"
+        if date[:5] == tomorrow:
+            birthdays.append(
+                row.get("Имя", "")
             )
 
-            msg2 = (
-                f"Коллеги, завтра день рождения у {name} 🎉\n\n"
-                "Давайте оперативно соберем сегодня и завтра до 12:00.\n\n"
-                "Перевод можно сделать мне на Тинькофф.\n"
-                "Любая сумма от 500 ₽."
-            )
 
-            send(msg1)
-            send(msg2)
+    if not birthdays:
+        print("Завтра именинников нет")
+        return
 
-    if not found:
-        print("Завтра именинников нет.")
 
+    names = "\n".join(
+        f"🎉 {name}"
+        for name in birthdays
+    )
+
+
+    msg1 = (
+        "@juliastrelkina, сегодня нужно создать группу "
+        "и открыть сбор 💵\n\n"
+        "Завтра день рождения у:\n"
+        f"{names}"
+    )
+
+
+    msg2 = (
+        "Коллеги, завтра день рождения у:\n\n"
+        f"{names}\n\n"
+        "Давайте оперативно соберем сегодня "
+        "и завтра до 12:00.\n\n"
+        "Переводим мне на Тинькофф банк.\n"
+        "Любая сумма от 500 ₽."
+    )
+
+
+    send_message(msg1)
+    send_message(msg2)
+
+
+    print("Сообщения отправлены")
+
+
+print("Бот запущен")
 
 check_birthdays()
+
+print("Бот завершил работу")
