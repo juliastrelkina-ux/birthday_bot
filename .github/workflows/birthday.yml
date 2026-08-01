@@ -2,7 +2,7 @@ name: Birthday Bot
 
 on:
   schedule:
-    - cron: '30 15 * * *'
+    - cron: '* * * * *'
   workflow_dispatch:
 
 jobs:
