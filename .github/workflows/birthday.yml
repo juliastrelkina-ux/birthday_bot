@@ -1,5 +1,7 @@
 name: Birthday Bot
 
+# test schedule
+
 on:
   schedule:
     - cron: '* * * * *'
