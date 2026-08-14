@@ -1,7 +1,5 @@
 name: Birthday Bot
 
-# test schedule
-
 on:
   schedule:
     - cron: '0 9 * * *'
@@ -23,9 +21,14 @@ jobs:
       - name: Install
         run: pip install -r requirements.txt
 
+      - name: Create Google credentials
+        env:
+          GOOGLE_SHEET: ${{ secrets.Google_sheet }}
+        run: |
+          printf '%s' "$GOOGLE_SHEET" > credentials.json
+
       - name: Run bot
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
         run: python bot.py
-
