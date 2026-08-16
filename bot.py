@@ -100,7 +100,7 @@ def check_birthdays():
 def saturday_reminder():
 
     # weekday(): понедельник = 0, ..., суббота = 5, воскресенье = 6
-    if datetime.now().weekday() == 6:
+    if datetime.now().weekday() == 5:
 
         send_message(
             "@oxana_vogel, cегодня день очистки холодильника! "
