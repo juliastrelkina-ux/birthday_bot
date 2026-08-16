@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 from google.oauth2.service_account import Credentials
 
 
+load_dotenv()
+
 BOT_TOKEN = os.environ["BOT_TOKEN"]
 CHAT_ID = os.environ["CHAT_ID"]
 
@@ -50,7 +52,6 @@ def check_birthdays():
         datetime.now() + timedelta(days=1)
     ).strftime("%d.%m")
 
-
     rows = sheet.get_all_records()
 
     birthdays = []
@@ -64,17 +65,14 @@ def check_birthdays():
                 row.get("Имя", "")
             )
 
-
     if not birthdays:
         print("Завтра именинников нет")
         return
-
 
     names = "\n".join(
         f"🎉 {name}"
         for name in birthdays
     )
-
 
     msg1 = (
         "@juliastrelkina, сегодня нужно создать группу "
@@ -83,26 +81,39 @@ def check_birthdays():
         f"{names}"
     )
 
-
     msg2 = (
         "Коллеги, завтра день рождения у:\n\n"
         f"{names}\n\n"
         "Давайте оперативно соберем сегодня "
         "и завтра до 12:00.\n\n"
-        "Переводим по ссылке ____ или мне по номеру телефона 79099365060 на Т-банк.\n"
+        "Переводим по ссылке ____ или мне по номеру телефона "
+        "79099365060 на Т-банк.\n"
         "Любая сумма от 500 ₽."
     )
-
 
     send_message(msg1)
     send_message(msg2)
 
-
     print("Сообщения отправлены")
+
+
+def saturday_reminder():
+
+    # weekday(): понедельник = 0, ..., суббота = 5, воскресенье = 6
+    if datetime.now().weekday() == 6:
+
+        send_message(
+            "@oxana_vogel, cегодня день очистки холодильника! "
+            "Не забудь напомнить дежурному!"
+        )
+
+        print("Субботнее напоминание отправлено")
 
 
 print("Бот запущен")
 
 check_birthdays()
+
+saturday_reminder()
 
 print("Бот завершил работу")
